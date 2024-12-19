@@ -5,6 +5,8 @@ WORKDIR /app
 COPY package*.json ./
 COPY prisma ./prisma/
 
+RUN echo "Installing dependencies..."
+
 RUN npm install -g pnpm
 
 RUN pnpm install
@@ -15,9 +17,15 @@ RUN npx prisma generate
 
 RUN pnpm run build
 
-FROM node:20-alpine AS runner
+######################################################
+
+FROM node:20-slim AS runner
+
+RUN apt-get update -y && apt-get install -y openssl
 
 WORKDIR /app
+
+RUN npm install -g pnpm
 
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/node_modules ./node_modules

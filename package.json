@@ -6,7 +6,7 @@
   "scripts": {
     "dev": "nodemon src/index.ts", 
     "build": "prisma generate && tsc -b", 
-    "start": "pnpm run migrate && node dist/index.js", 
+    "start": "pnpm run migrate && node dist/src/server.js", 
     "migrate": "prisma migrate deploy", 
     "prisma:studio": "prisma studio", 
     "prisma:migrate:dev": "prisma migrate dev --name init"

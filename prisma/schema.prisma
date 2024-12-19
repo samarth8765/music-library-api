@@ -1,0 +1,87 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  Admin
+  Editor
+  Viewer
+}
+
+enum Category {
+  artist
+  album
+  track
+}
+
+model User {
+  id        String   @id @default(uuid())
+  email     String   @unique
+  password  String
+  role      Role
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  favorites Favorite[] // Relation: One User -> Many Favorites
+}
+
+model Artist {
+  artist_id String   @id @default(uuid())
+  name      String
+  grammy    Int
+  hidden    Boolean
+  albums    Album[] // Relation: One Artist -> Many Albums
+  tracks    Track[] // Relation: One Artist -> Many Tracks
+  createdAt DateTime @default(now())
+
+  favorites Favorite[] // Relation: One Artist -> Many Favorites
+}
+
+model Album {
+  album_id  String   @id @default(uuid())
+  name      String
+  year      Int
+  hidden    Boolean
+  artist_id String
+  artist    Artist   @relation(fields: [artist_id], references: [artist_id]) // Relation: Many Albums -> One Artist
+  tracks    Track[] // Relation: One Album -> Many Tracks
+  createdAt DateTime @default(now())
+
+  favorites Favorite[] // Relation: One Album -> Many Favorites
+}
+
+model Track {
+  track_id  String   @id @default(uuid())
+  name      String
+  duration  Int
+  hidden    Boolean
+  album_id  String
+  artist_id String
+  album     Album    @relation(fields: [album_id], references: [album_id]) // Relation: Many Tracks -> One Album
+  artist    Artist   @relation(fields: [artist_id], references: [artist_id]) // Relation: Many Tracks -> One Artist
+  createdAt DateTime @default(now())
+
+  favorites Favorite[] // Relation: One Track -> Many Favorites
+}
+
+model Favorite {
+  favorite_id String   @id @default(uuid())
+  user_id     String
+  category    Category
+  item_id     String
+  createdAt   DateTime @default(now())
+
+  User            User?   @relation(fields: [userId], references: [id])
+  userId          String?
+  Artist          Artist? @relation(fields: [artistArtist_id], references: [artist_id])
+  artistArtist_id String?
+  Album           Album?  @relation(fields: [albumAlbum_id], references: [album_id])
+  albumAlbum_id   String?
+  Track           Track?  @relation(fields: [trackTrack_id], references: [track_id])
+  trackTrack_id   String?
+}

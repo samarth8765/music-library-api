@@ -9,6 +9,7 @@ services:
       - DATABASE_URL=postgresql://postgres:postgres@db:5432/music-db?schema=public
       - NODE_ENV=production
       - JWT_SECRET="39ur48hfn##$*hj3w2en8*ei93ijd39fjd39fjd"
+      - REDIS_URL=redis://redis:6379
     depends_on:
       db:
         condition: service_healthy
@@ -34,8 +35,6 @@ services:
   redis:
     image: redis:latest
     container_name: redis
-    environment:
-      - REDIS_URL=redis://redis:6379
     ports:
       - "6379:6379"
     healthcheck:

@@ -1,0 +1,801 @@
+{
+	"info": {
+		"_postman_id": "79633e58-f7b7-43ad-b545-ae69dfbfbae6",
+		"name": "Voosh Foods",
+		"schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+		"_exporter_id": "20330413"
+	},
+	"item": [
+		{
+			"name": "Identity",
+			"item": [
+				{
+					"name": "Login",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"admin@example.com\",\r\n    \"password\": \"Password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{ENDPOINT}}/login"
+					},
+					"response": []
+				},
+				{
+					"name": "Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"editor@example.com\",\r\n    \"password\": \"Password\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{ENDPOINT}}/signup"
+					},
+					"response": []
+				},
+				{
+					"name": "Logout",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMIN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{ENDPOINT}}/logout"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMIN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/users?limit=2r&offset=3&role=Editor",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"users"
+							],
+							"query": [
+								{
+									"key": "limit",
+									"value": "2r"
+								},
+								{
+									"key": "offset",
+									"value": "3"
+								},
+								{
+									"key": "role",
+									"value": "Editor"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMIN}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\" : \"dummy3@voosh.com\",\r\n    \"password\" : \"Password\",\r\n    \"role\" : \"Editor\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{ENDPOINT}}/users/add-user"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMIN}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/users/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"users",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "ab490ec7-8a0e-4feb-a5be-5baaf7cbcdf2"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update Password",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{VIEWER}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"old_password\" : \"Password\",\r\n    \"new_password\" : \"Password\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{ENDPOINT}}/users/update-password"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Artist",
+			"item": [
+				{
+					"name": "Get All Artist",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMIN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/artists?grammy=-94",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"artists"
+							],
+							"query": [
+								{
+									"key": "grammy",
+									"value": "-94"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Artist By ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{VIEWER}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/artists/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"artists",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "b2e4926f-6eb2-4b1f-9956-43183b0dc870"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Artist",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{EDITOR}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"TER\",\r\n    \"grammy\" : 4,\r\n    \"hidden\" : false\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{ENDPOINT}}/artists/add-artist"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Artist",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{EDITOR}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}/artists/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"artists",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "b2e4926f-6eb2-4b1f-9956-43183b0dc870"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Artist",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMIN}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": "{{ENDPOINT}}/artists/7fcf1664-f6b6-481f-9a15-e5db57d0008e"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Album",
+			"item": [
+				{
+					"name": "Get All Albums",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{EDITOR}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/albums?artist_id=0960b5ea-53e2-4449-ac0a-43c8d4cfc26d&hidden=true",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"albums"
+							],
+							"query": [
+								{
+									"key": "artist_id",
+									"value": "0960b5ea-53e2-4449-ac0a-43c8d4cfc26d"
+								},
+								{
+									"key": "hidden",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Album By ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{VIEWER}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/albums/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"albums",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4271a5ba-b88a-4f59-a0c2-50fc898a0c93"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{EDITOR}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"artist_id\": \"0960b5ea-53e2-4449-ac0a-43c8d4cfc26d\",\r\n    \"name\": \"smmy 6\",\r\n    \"year\": 2000,\r\n    \"hidden\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{ENDPOINT}}/albums/add-album"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{EDITOR}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\" : \"Tupac\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}/albums/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"albums",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "4271a5ba-b88a-4f59-a0c2-50fc898a0c93"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Album",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{EDITOR}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/albums/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"albums",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "8269b65b-adfb-41a1-84f8-d7c5fe4b9e52"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Track",
+			"item": [
+				{
+					"name": "Get All Tracks",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{EDITOR}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/tracks?hidden=true",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"tracks"
+							],
+							"query": [
+								{
+									"key": "hidden",
+									"value": "true"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get Track By ID",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMIN}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/tracks/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"tracks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "c75cdb89-a937-40ca-ad4f-a066ba3a581e"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Track",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMIN}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"album_id\": \"84aa1358-1543-4025-a5f0-e14f33872de4\",\r\n    \"artist_id\": \"0960b5ea-53e2-4449-ac0a-43c8d4cfc26d\",\r\n    \"name\": \"Slim Shady\",\r\n    \"duration\": 263,\r\n    \"hidden\": true\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{ENDPOINT}}/tracks/add-track"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Track",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{ADMIN}}"
+							}
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"duration\" : 440\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{ENDPOINT}}/tracks/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"tracks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f231d4ad-6736-4a8c-b436-d722ba913b34"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Track",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{EDITOR}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/tracks/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"tracks",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "f231d4ad-6736-4a8c-b436-d722ba913b34"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Favorite",
+			"item": [
+				{
+					"name": "Get All Favorites",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{VIEWER}}"
+							}
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/favorites/:category&",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"favorites",
+								":category&"
+							],
+							"variable": [
+								{
+									"key": "category&",
+									"value": ""
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Add Favorite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{VIEWER}}"
+							}
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"category\" : \"album\",\r\n    \"item_id\" : \"84aa1358-1543-4025-a5f0-e14f33872de4\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": "{{ENDPOINT}}/favorites/add-favorite"
+					},
+					"response": []
+				},
+				{
+					"name": "Remove Favorite",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": {
+								"token": "{{VIEWER}}"
+							}
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{ENDPOINT}}/favorites/remove-favorite/:id",
+							"host": [
+								"{{ENDPOINT}}"
+							],
+							"path": [
+								"favorites",
+								"remove-favorite",
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "d19d3302-4706-4231-930e-59beb7824f91"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "PING",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": "{{ENDPOINT}}/ping"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "ENDPOINT",
+			"value": "http://localhost:3000/api/v1",
+			"type": "string"
+		},
+		{
+			"key": "ADMIN",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImQ5ODQxZDQ3LThjN2QtNDgyOS1iOTI3LTViZTdhMTFjOTQ4MCIsInJvbGUiOiJBZG1pbiIsImlhdCI6MTczNDY4OTkwOSwiZXhwIjoxNzM0Nzc2MzA5fQ.ROMFdTK8S_8G_KhUvThSpO-9rsaAVCwk1vlKZQatFzA",
+			"type": "string"
+		},
+		{
+			"key": "VIEWER",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRjY2IxYjAyLWJkNjMtNDM3ZS1hNDAxLTIwYzEwNGM2YWVhYyIsInJvbGUiOiJWaWV3ZXIiLCJpYXQiOjE3MzQ2MzUyNDIsImV4cCI6MTczNDcyMTY0Mn0.FYiIlTIoKAaEbUYjBkN5j6iPYBiUjFPtaPhS3ZNtttI",
+			"type": "string"
+		},
+		{
+			"key": "EDITOR",
+			"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImRmMjA1ZGJmLTk4NGEtNGMyNC1iMGQ1LThkMmNhODJiM2ZkNyIsInJvbGUiOiJFZGl0b3IiLCJpYXQiOjE3MzQ2MzUzMTAsImV4cCI6MTczNDcyMTcxMH0.GYRKXI7aHg8ftsFH7ktnAh1Bse3DDSSz_HxiZ50Xr44",
+			"type": "string"
+		}
+	]
+}

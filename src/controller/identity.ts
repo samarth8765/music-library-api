@@ -7,8 +7,9 @@ import {
 	UnauthorizedError,
 } from "../utils";
 import { compare, hash } from "bcrypt";
-import { sign } from "jsonwebtoken";
+import { type JwtPayload, sign, verify } from "jsonwebtoken";
 import { db } from "../utils";
+import { redisClient } from "../services";
 
 const Signup = async (request: Request, response: Response) => {
 	const { email, password } = request.body;
@@ -82,7 +83,7 @@ const Login = async (
 	const token = sign(
 		{ id: userExists.id, role: userExists.role },
 		process.env.JWT_SECRET as string,
-		{ expiresIn: "24h" },
+		{ expiresIn: "1m" },
 	);
 
 	return response.status(200).json({
@@ -95,6 +96,30 @@ const Login = async (
 	});
 };
 
-const Logout = (request: Request, response: Response) => {};
+const Logout = async (request: Request, response: Response) => {
+	const token = request.header("Authorization")?.split(" ")[1];
+	if (!token) {
+		throw new UnauthorizedError();
+	}
+
+	const decoded = verify(token, process.env.JWT_SECRET as string) as JwtPayload;
+
+	if (!decoded.exp) {
+		throw new UnauthorizedError();
+	}
+
+	const expiresIn = decoded.exp - Math.floor(Date.now() / 1000);
+
+	await redisClient.set(token, "blacklisted", {
+		EX: expiresIn,
+	});
+
+	return response.status(200).json({
+		status: 200,
+		data: null,
+		message: "User logged out successfully",
+		error: null,
+	});
+};
 
 export const IdentityController = { Signup, Login, Logout };

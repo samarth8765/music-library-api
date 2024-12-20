@@ -4,6 +4,7 @@ import {
 	ConflictError,
 	db,
 	NotFoundError,
+	PaginationSchema,
 	UserSchema,
 	UserUpdatePasswordSchema,
 	type Role,
@@ -13,10 +14,16 @@ import { compare, hash } from "bcrypt";
 const GetAllUsers = async (request: Request, response: Response) => {
 	const { limit = 5, offset = 0, role } = request.query;
 
+	if (!PaginationSchema.safeParse(request.query).success) {
+		throw new BadRequestError("Invalid Pagination Query");
+	}
+
 	const validRoles = ["Editor", "Viewer"];
 
 	if (role && !validRoles.includes(role as Role)) {
-		throw new BadRequestError("Bad Request, Reason:${Invalid Role}");
+		throw new BadRequestError(
+			"Bad Request, Reason: Role should be Editor or Viewer",
+		);
 	}
 
 	const users = await db.user.findMany({

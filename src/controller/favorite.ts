@@ -1,10 +1,20 @@
 import type { Request, Response } from "express";
-import { FavoriteSchema, BadRequestError, NotFoundError, db } from "../utils";
+import {
+	FavoriteSchema,
+	BadRequestError,
+	NotFoundError,
+	db,
+	PaginationSchema,
+} from "../utils";
 import type { Album, Artist, Category, Track } from "@prisma/client";
 
 export const GetAllFavorites = async (request: Request, response: Response) => {
 	const { category } = request.params;
 	const { limit = 5, offset = 0 } = request.query;
+
+	if (!PaginationSchema.safeParse(request.query).success) {
+		throw new BadRequestError("Invalid Pagination Query");
+	}
 
 	//@ts-ignore
 	const user_id = request.user.id;
@@ -28,6 +38,7 @@ export const GetAllFavorites = async (request: Request, response: Response) => {
 			Artist: { select: { name: true } },
 			Album: { select: { name: true } },
 			Track: { select: { name: true } },
+			createdAt: true,
 		},
 	});
 
@@ -35,10 +46,10 @@ export const GetAllFavorites = async (request: Request, response: Response) => {
 
 	const formattedFavorites = favorites.map((fav) => ({
 		favorite_id: fav.favorite_id,
-		user_id: fav.user_id,
 		category: fav.category,
 		item_id: fav.item_id,
 		name: fav.Artist?.name || fav.Album?.name || fav.Track?.name,
+		createdAt: fav.createdAt,
 	}));
 
 	return response.status(200).json({
@@ -76,12 +87,23 @@ const AddFavorite = async (request: Request, response: Response) => {
 		throw new NotFoundError("The category item does not exist.");
 	}
 
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	const favoriteData: any = {
+		user_id,
+		category: category as Category,
+		item_id,
+	};
+
+	if (category === "artist") {
+		favoriteData.artistArtist_id = item_id;
+	} else if (category === "album") {
+		favoriteData.albumAlbum_id = item_id;
+	} else if (category === "track") {
+		favoriteData.trackTrack_id = item_id;
+	}
+
 	await db.favorite.create({
-		data: {
-			user_id,
-			category: category as Category,
-			item_id,
-		},
+		data: favoriteData,
 	});
 
 	return response.status(201).json({

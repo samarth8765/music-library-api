@@ -83,7 +83,7 @@ const Login = async (
 	const token = sign(
 		{ id: userExists.id, role: userExists.role },
 		process.env.JWT_SECRET as string,
-		{ expiresIn: "1m" },
+		{ expiresIn: "24h" },
 	);
 
 	return response.status(200).json({

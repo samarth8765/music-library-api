@@ -4,16 +4,24 @@ import {
 	BadRequestError,
 	db,
 	NotFoundError,
+	PaginationSchema,
 	UpdateArtistSchema,
 } from "../utils";
 
 const GetAllArtist = async (request: Request, response: Response) => {
 	const { limit = 5, offset = 0, grammy, hidden } = request.query;
 
+	if (!PaginationSchema.safeParse(request.query).success) {
+		throw new BadRequestError("Invalid Pagination Query");
+	}
+
 	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
 	const filters: any = {};
-	if (grammy !== undefined) filters.grammy = Number(grammy);
-	if (hidden !== undefined) filters.hidden = hidden === "true";
+	if (grammy !== undefined && Number(grammy) && Number(grammy) >= 0)
+		filters.grammy = Number(grammy);
+	if (hidden !== undefined && ["true", "false"].includes(hidden as string)) {
+		filters.hidden = hidden === "true";
+	}
 
 	const artists = await db.artist.findMany({
 		where: filters,

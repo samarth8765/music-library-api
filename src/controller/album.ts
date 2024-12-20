@@ -4,18 +4,41 @@ import {
 	BadRequestError,
 	db,
 	NotFoundError,
+	PaginationSchema,
 	UpdateAlbumSchema,
 } from "../utils";
 
 const GetAllAlbums = async (request: Request, response: Response) => {
 	const { limit = 5, offset = 0, artist_id, hidden } = request.query;
 
-	const albums = await db.album.findMany({
-		where: {
-			artist: {
+	if (!PaginationSchema.safeParse(request.query).success) {
+		throw new BadRequestError("Invalid Pagination Query");
+	}
+
+	// biome-ignore lint/suspicious/noExplicitAny: <explanation>
+	const filters: any = {};
+	if (artist_id) {
+		const artist = await db.artist.findUnique({
+			where: {
 				artist_id: String(artist_id),
 			},
-		},
+		});
+
+		if (artist) {
+			filters.artist = {
+				artist_id: artist.artist_id,
+			};
+		} else {
+			throw new NotFoundError("Artist Not Found");
+		}
+	}
+
+	if (hidden !== undefined && ["true", "false"].includes(hidden as string)) {
+		filters.hidden = hidden === "true";
+	}
+
+	const albums = await db.album.findMany({
+		where: filters,
 		skip: Number(offset),
 		take: Number(limit),
 		select: {
@@ -23,12 +46,25 @@ const GetAllAlbums = async (request: Request, response: Response) => {
 			name: true,
 			year: true,
 			hidden: true,
+			artist: {
+				select: {
+					name: true,
+				},
+			},
 		},
 	});
 
+	const formattedAlbums = albums.map((album) => ({
+		album_id: album.album_id,
+		artist_name: album.artist.name,
+		name: album.name,
+		year: album.year,
+		hidden: album.hidden,
+	}));
+
 	return response.status(200).json({
 		status: 200,
-		data: albums,
+		data: formattedAlbums,
 		message: "Albums retrieved Successfully",
 		error: null,
 	});
